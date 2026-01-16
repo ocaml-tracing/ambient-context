@@ -15,31 +15,37 @@ let set_current_storage (storage : Storage.t) = Atomic.set cur_storage storage
 
 (** {2 Functions operating with the current storage} *)
 
-(** Get the context from the current storage, or [Hmap.empty] if there is no ambient
-    context. *)
+(** Get the context from the current storage, or [Hmap.empty] if there is no
+    ambient context. *)
 let[@inline] get_context () = Storage.get_context (Atomic.get cur_storage)
 
-(** [with_context ctx f] calls [f()] in an ambient context in which [get_context()] will
-    return [ctx]. Once [f()] returns, the storage is reset to its previous value. *)
-let[@inline] with_context ctx f = Storage.with_context (Atomic.get cur_storage) ctx f
+(** [with_context ctx f] calls [f()] in an ambient context in which
+    [get_context()] will return [ctx]. Once [f()] returns, the storage is reset
+    to its previous value. *)
+let[@inline] with_context ctx f =
+  Storage.with_context (Atomic.get cur_storage) ctx f
 
 (** Get the ambient context and then look up [k] in it *)
 let[@inline] get (k : 'a Context.key) : 'a option = Hmap.find k (get_context ())
 
-(** [with_key_bound_to storage k v f] calls [f()] in a context updated to have [k] map to
-    [v]. *)
+(** Create a new key *)
+let new_key : unit -> 'a Context.key = Hmap.Key.create
+
+(** [with_key_bound_to storage k v f] calls [f()] in a context updated to have
+    [k] map to [v]. *)
 let with_key_bound_to k v f =
-   let storage = get_current_storage () in
-   let ctx = Storage.get_context storage in
-   let new_ctx = Hmap.add k v ctx in
-   Storage.with_context storage new_ctx f
+  let storage = get_current_storage () in
+  let ctx = Storage.get_context storage in
+  let new_ctx = Hmap.add k v ctx in
+  Storage.with_context storage new_ctx f
 
-
-(** [with_key_unbound k f] calls [f()] in a context updated to have [k] bound to no value. *)
+(** [with_key_unbound k f] calls [f()] in a context updated to have [k] bound to
+    no value. *)
 let with_key_unbound k f =
-   let storage = Atomic.get cur_storage in
-   let ctx = Storage.get_context storage in
-   if Hmap.mem k ctx then
-     let new_ctx = Hmap.rem k ctx in
-     Storage.with_context storage new_ctx f
-   else f ()
+  let storage = Atomic.get cur_storage in
+  let ctx = Storage.get_context storage in
+  if Hmap.mem k ctx then (
+    let new_ctx = Hmap.rem k ctx in
+    Storage.with_context storage new_ctx f
+  ) else
+    f ()
