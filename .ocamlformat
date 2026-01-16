@@ -1,23 +1,14 @@
-version = 0.28.1
-
-margin = 90
-
-extension-indent = 3
-function-indent = 3
-let-binding-indent = 3
-type-decl-indent = 3
-
-parse-docstrings = true
-wrap-comments = true
-
-field-space = loose
-let-binding-spacing = sparse
-space-around-records = true
-space-around-arrays = true
-space-around-lists = true
-space-around-variants = true
-
-indicate-nested-or-patterns = space
-break-cases = fit-or-vertical
-break-sequences = true
-sequence-style = separator
+version = 0.27.0
+profile=conventional
+margin=80
+if-then-else=k-r
+parens-ite=true
+parens-tuple=multi-line-only
+sequence-style=terminator
+type-decl=sparse
+break-cases=toplevel
+cases-exp-indent=2
+field-space=tight-decl
+leading-nested-match-parens=true
+module-item-spacing=sparse
+quiet=true

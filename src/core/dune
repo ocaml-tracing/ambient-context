@@ -1,0 +1,6 @@
+(library
+ (name ambient_context_core)
+ (public_name ambient-context.core)
+ (synopsis "Core definitions for ambient-context")
+ (libraries
+  (re_export hmap)))

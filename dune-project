@@ -1,15 +1,15 @@
-(lang dune 3.6)
+(lang dune 3.0)
 
 (name ambient-context)
 
 (generate_opam_files true)
 
 (source
- (github ELLIOTTCABLE/ocaml-ambient-context))
+ (github ocaml-tracing/ocaml-ambient-context))
 
-(authors ELLIOTTCABLE)
+(authors ELLIOTTCABLE "c-cube")
 
-(maintainers "ELLIOTTCABLE <opam@ell.io>")
+(maintainers "ELLIOTTCABLE <opam@ell.io>" "c-cube")
 
 (license MIT)
 
@@ -20,6 +20,7 @@
  (depends
   (ocaml
    (>= 4.08))
+  hmap
   (alcotest :with-test)
   (bisect_ppx :with-test)
   (odig :with-doc)
@@ -27,9 +28,12 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (>= 0.28)
-    (< 0.29))))
- (depopts hmap))
+    (>= 0.27)
+    (< 0.28))))
+ (conflicts
+  (thread-local-storage
+   (< 0.2)))
+ (depopts thread-local-storage))
 
 (package
  (name ambient-context-lwt)

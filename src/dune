@@ -1,0 +1,16 @@
+(library
+ (name ambient_context)
+ (public_name ambient-context)
+ (synopsis
+  "Abstraction over thread-local storage and fiber-local storage mechanisms")
+ (flags :standard -open Ambient_context_core -open Ambient_context_atomic)
+ (libraries
+  hmap
+  threads
+  (re_export ambient-context.core)
+  (re_export ambient-context.atomic)
+  (select
+   default_.ml
+   from
+   (ambient-context.tls -> default_.tls.ml)
+   (-> default_.map.ml))))

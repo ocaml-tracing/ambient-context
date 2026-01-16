@@ -1,6 +1,0 @@
-(library
- (name ambient_context_tls)
- (synopsis "Storage backend for ambient-context using thread-local storage")
- (public_name ambient-context.tls)
- (optional)
- (libraries threads ambient-context.types ambient-context.thread_local))

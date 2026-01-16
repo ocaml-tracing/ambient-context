@@ -2,7 +2,7 @@
  (name ambient_context_atomic)
  (synopsis "Compatibility package for the Atomic module for ambient-context")
  (public_name ambient-context.atomic)
- (modules atomic))
+ (modules atomic util_atomic))
 
 (executable
  (modules gen)
