@@ -1,4 +1,9 @@
 (test
  (name test_lwt)
  (package ambient-context-lwt)
- (libraries ambient-context-lwt lwt.unix alcotest alcotest-lwt))
+ (libraries
+  ambient-context
+  ambient-context-lwt
+  lwt.unix
+  alcotest
+  alcotest-lwt))
