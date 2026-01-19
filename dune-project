@@ -1,16 +1,12 @@
 (lang dune 3.6)
 
 (name ambient-context)
-
 (generate_opam_files true)
-
+(version 0.1.1)
 (source
- (github ELLIOTTCABLE/ocaml-ambient-context))
-
+ (github ocaml-tracing/ambient-context))
 (authors ELLIOTTCABLE)
-
 (maintainers "ELLIOTTCABLE <opam@ell.io>")
-
 (license MIT)
 
 (package
