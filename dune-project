@@ -27,8 +27,8 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (>= 0.24)
-    (< 0.25))))
+    (>= 0.28)
+    (< 0.29))))
  (depopts hmap))
 
 (package
