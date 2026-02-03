@@ -20,7 +20,8 @@ module type STORAGE = sig
       [h]. Once [cb()] returns, the storage is reset to its previous value. *)
 
   val create_key : unit -> 'a key
-  (** Create a new storage key, guaranteed to be distinct from any previously created key. *)
+  (** Create a new storage key, guaranteed to be distinct from any previously created key.
+  *)
 
   val get : 'a key -> 'a option
   val with_binding : 'a key -> 'a -> (unit -> 'b) -> 'b
