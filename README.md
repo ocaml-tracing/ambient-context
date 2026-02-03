@@ -159,27 +159,30 @@ let http_request ?headers ?body action url =
 Contributing
 ------------
 
-1. Create an opam switch and install the dependencies:
+1. Create an opam switch and install the dependencies (opam >= 2.2 is recommended for the `--with-dev-setup` flag):
 
    ```console
-   $ opam switch create . ocaml.5.0.0 --deps-only --no-install
+   $ opam switch create . ocaml.4.14.2 --deps-only --no-install
+   $ eval $(opam env --switch=.)
 
-   # If you have opam >= 2.2
-   $ opam install . --deps-only --with-test --with-dev-setup
-
-   # ... or with opam < 2.2
-   $ opam install . --deps-only --with-test
-   $ opam install ocaml-lsp-server ocamlformat
+   $ opam install ./ambient-context.opam \
+      --deps-only --with-test --with-dev-setup
    ```
 
-2. Install [pre-commit][], and then configure your checkout:
+2. [Install pre-commit][], and then configure your checkout:
 
    ```console
    $ pre-commit install
    pre-commit installed at .git/hooks/pre-commit
    ```
 
-[pre-commit]: <https://pre-commit.com/index.html#install> "Installation instructions for th pre-commit tool"
+[Install pre-commit]: <https://pre-commit.com/index.html#install> "Installation instructions for th pre-commit tool"
+
+3. Build and run the tests:
+
+   ```console
+   $ dune runtest -f --only-packages=ambient-context --display short
+   ```
 
 License
 -------
