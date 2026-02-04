@@ -11,11 +11,14 @@ on:
 jobs:
    test-locked:
       name: build w/ Eio (locked deps)
+      continue-on-error: ${{ matrix.os != 'ubuntu-latest' }}
       strategy:
          fail-fast: false
          matrix:
             os:
                - ubuntu-latest
+               - macos-latest
+               - windows-latest
             ocaml-compiler:
                - "5.3"
 
@@ -51,6 +54,8 @@ jobs:
          matrix:
             os:
                - ubuntu-latest
+               - macos-latest
+               - windows-latest
             ocaml-compiler:
                - "5.3"
 
