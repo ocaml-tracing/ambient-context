@@ -159,14 +159,28 @@ let http_request ?headers ?body action url =
 Contributing
 ------------
 
-1. Create an opam switch and install the dependencies (opam >= 2.2 is recommended for the `--with-dev-setup` flag):
+This package actively supports and develops for both OCaml 4 and OCaml 5. However, a core dependency for one usage-pattern, `eio`, is only available on OCaml 5. To fully build and test this package, you'll need an OCaml 5 environment; but testing on OCaml 4 is also required in general.
+
+For simple changes, just using an OCaml 5 switch is sufficient; however, you may not see breakage with OCaml 4 until your changes hit CI. For more complex changes, or a faster turnaround, you may want to maintain separate `ambient-context` switches for both versions of OCaml:
+
+1. Create opam switches and install the dependencies (opam >= 2.2 is recommended for the `--with-dev-setup` flag.)
+
+   To create separate switches (and to generate/modify lockfiles), there's a helper script - simply run that. (This will default to linking the OCaml 4 into the working-directory.)
 
    ```console
-   $ opam switch create . ocaml.4.14.2 --deps-only --no-install
-   $ eval $(opam env --switch=.)
+   $ ./scripts/regenerate_switches.sh --locked
+   $ eval "$(opam env --set-switch --switch=.)"
+   ```
 
-   $ opam install ./ambient-context.opam \
-      --deps-only --with-test --with-dev-setup
+   Alternatively, if you aren't regenerating lockfiles, you can get away with a single OCaml 5 directory-local switch instead:
+
+   ```console
+   $ opam switch create . --deps-only --locked --no-install \
+      --formula='"ocaml-base-compiler" {>= "5.0" & < "6.0"}'
+   $ eval "$(opam env --set-switch --switch=.)"
+
+   $ opam install . --deps-only --locked \
+      --with-doc --with-test --with-dev-setup
    ```
 
 2. [Install pre-commit][], and then configure your checkout:
