@@ -5,40 +5,93 @@ on:
       branches:
          - main
    pull_request:
+   schedule:
+      - cron: "0 0 1,15 * *" # Biweekly on 1st and 15th
 
 jobs:
-   run:
-      name: build w/ only TLS
+   test-locked:
+      name: build w/ only TLS (locked deps)
+      continue-on-error: ${{ matrix.os != 'ubuntu-latest' }}
       strategy:
-         fail-fast: true
+         fail-fast: false
          matrix:
             os:
                - ubuntu-latest
-                 #- macos-latest
-                 #- windows-latest
+               - macos-latest # arm64
+               - macos-15-intel
+               - windows-latest
             ocaml-compiler:
                - "4.08"
                - "4.14"
-               - "5.1"
+               - "5.3"
+            exclude:
+               - os: windows-latest
+                 ocaml-compiler: "4.08"
+               - os: macos-latest
+                 ocaml-compiler: "4.08"
 
       runs-on: ${{ matrix.os }}
       steps:
-         - uses: actions/checkout@main
+         - uses: actions/checkout@v6
          - name: Use OCaml ${{ matrix.ocaml-compiler }}
-           uses: ocaml/setup-ocaml@v2
+           uses: ocaml/setup-ocaml@v3
            with:
               ocaml-compiler: ${{ matrix.ocaml-compiler }}
               dune-cache: true
               opam-pin: false
-              opam-depext: false
 
          - run: opam pin . -y -n
-         - run: opam install -t ambient-context --deps-only
+         - run: opam install ambient-context --locked --deps-only --with-doc --with-test --with-dev-setup
          - run: opam exec -- dune build @install --only-packages=ambient-context
-         - run: opam exec -- dune runtest --only-packages=ambient-context
+         - run: opam exec -- dune runtest -f --only-packages=ambient-context
 
          # now redo it with hmap installed
          - run: opam install hmap
 
          - run: opam exec -- dune build @install --only-packages=ambient-context
-         - run: opam exec -- dune runtest --only-packages=ambient-context
+         - run: opam exec -- dune runtest -f --only-packages=ambient-context
+
+   test-latest:
+      name: build w/ only TLS (latest deps)
+      # Only run on schedule
+      if: github.event_name == 'schedule'
+      continue-on-error: true
+
+      strategy:
+         fail-fast: false
+         matrix:
+            os:
+               - ubuntu-latest
+               - macos-latest # arm64
+               - macos-15-intel
+               - windows-latest
+            ocaml-compiler:
+               - "4.08"
+               - "4.14"
+               - "5.3"
+            exclude:
+               - os: windows-latest
+                 ocaml-compiler: "4.08"
+               - os: macos-latest
+                 ocaml-compiler: "4.08"
+
+      runs-on: ${{ matrix.os }}
+      steps:
+         - uses: actions/checkout@v6
+         - name: Use OCaml ${{ matrix.ocaml-compiler }}
+           uses: ocaml/setup-ocaml@v3
+           with:
+              ocaml-compiler: ${{ matrix.ocaml-compiler }}
+              dune-cache: true
+              opam-pin: false
+
+         - run: opam pin . -y -n
+         - run: opam install ambient-context --deps-only --with-doc --with-test --with-dev-setup
+         - run: opam exec -- dune build @install --only-packages=ambient-context
+         - run: opam exec -- dune runtest -f --only-packages=ambient-context
+
+         # now redo it with hmap installed
+         - run: opam install hmap
+
+         - run: opam exec -- dune build @install --only-packages=ambient-context
+         - run: opam exec -- dune runtest -f --only-packages=ambient-context
