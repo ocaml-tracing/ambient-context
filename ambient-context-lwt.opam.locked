@@ -1,0 +1,103 @@
+opam-version: "2.0"
+name: "ambient-context-lwt"
+version: "0.1.1"
+synopsis:
+  "Storage backend for ambient-context using Lwt's sequence-associated storage"
+maintainer: "ELLIOTTCABLE <opam@ell.io>"
+authors: "ELLIOTTCABLE"
+license: "MIT"
+homepage: "https://github.com/ELLIOTTCABLE/ocaml-ambient-context"
+bug-reports: "https://github.com/ELLIOTTCABLE/ocaml-ambient-context/issues"
+depends: [
+  "alcotest" {= "1.9.1" & with-test}
+  "alcotest-lwt" {= "1.9.1" & with-test}
+  "ambient-context" {= "0.1.1"}
+  "astring" {= "0.8.5" & with-test}
+  "b0" {= "0.0.5" & with-doc}
+  "base" {= "v0.16.4" & with-dev-setup}
+  "base-bigarray" {= "base"}
+  "base-bytes" {= "base"}
+  "base-threads" {= "base"}
+  "base-unix" {= "base"}
+  "bisect_ppx" {= "2.8.3" & with-test}
+  "camlp-streams" {= "5.0.1" & with-doc}
+  "chrome-trace" {= "3.21.0" & with-dev-setup}
+  "cmdliner" {= "1.3.0" & with-test}
+  "cppo" {= "1.8.0"}
+  "crunch" {= "4.0.0" & with-doc}
+  "csexp" {= "1.5.2"}
+  "dune" {= "3.21.0"}
+  "dune-build-info" {= "3.21.0" & with-dev-setup}
+  "dune-configurator" {= "3.21.0"}
+  "dune-rpc" {= "3.21.0" & with-dev-setup}
+  "dyn" {= "3.21.0" & with-dev-setup}
+  "either" {= "1.0.0" & with-dev-setup}
+  "fiber" {= "3.7.0" & with-dev-setup}
+  "fix" {= "20250919" & with-dev-setup}
+  "fmt" {= "0.11.0" & with-test}
+  "fpath" {= "0.7.3" & with-doc}
+  "fs-io" {= "3.21.0" & with-dev-setup}
+  "logs" {= "0.10.0" & with-test}
+  "lwt" {= "6.1.0"}
+  "menhir" {= "20260122" & with-dev-setup}
+  "menhirCST" {= "20260122" & with-dev-setup}
+  "menhirGLR" {= "20260122" & with-dev-setup}
+  "menhirLib" {= "20260122" & with-dev-setup}
+  "menhirSdk" {= "20260122" & with-dev-setup}
+  "merlin-lib" {= "4.16-414" & with-dev-setup}
+  "ocaml" {= "4.14.2"}
+  "ocaml-base-compiler" {= "4.14.2"}
+  "ocaml-compiler-libs" {= "v0.12.4" & with-test}
+  "ocaml-config" {= "2"}
+  "ocaml-lsp-server" {= "1.17.0" & with-dev-setup}
+  "ocaml-options-vanilla" {= "1"}
+  "ocaml-syntax-shims" {= "1.0.0" & with-test}
+  "ocaml-version" {= "4.0.3" & with-dev-setup}
+  "ocamlbuild" {= "0.16.1" & with-test}
+  "ocamlc-loc" {= "3.21.0" & with-dev-setup}
+  "ocamlfind" {= "1.9.8"}
+  "ocamlformat" {= "0.28.1" & with-dev-setup}
+  "ocamlformat-lib" {= "0.28.1" & with-dev-setup}
+  "ocamlformat-rpc-lib" {= "0.28.1" & with-dev-setup}
+  "ocp-indent" {= "1.9.0" & with-dev-setup}
+  "ocplib-endian" {= "1.2"}
+  "odig" {= "0.0.9" & with-doc}
+  "odoc" {= "3.1.0" & with-doc}
+  "odoc-parser" {= "3.1.0" & with-doc}
+  "ordering" {= "3.21.0" & with-dev-setup}
+  "pp" {= "2.0.0" & with-dev-setup}
+  "ppx_derivers" {= "1.2.1" & with-test}
+  "ppx_yojson_conv_lib" {= "v0.16.0" & with-dev-setup}
+  "ppxlib" {= "0.35.0" & with-test}
+  "ptime" {= "1.2.0" & with-doc}
+  "re" {= "1.14.0" & with-test}
+  "seq" {= "base" & with-doc}
+  "sexplib0" {= "v0.16.0" & with-test}
+  "spawn" {= "v0.17.0" & with-dev-setup}
+  "stdio" {= "v0.16.0" & with-dev-setup}
+  "stdlib-shims" {= "0.3.0" & with-test}
+  "stdune" {= "3.21.0" & with-dev-setup}
+  "top-closure" {= "3.21.0" & with-dev-setup}
+  "topkg" {= "1.1.1" & with-test}
+  "tyxml" {= "4.6.0" & with-doc}
+  "uucp" {= "17.0.0" & with-dev-setup}
+  "uuseg" {= "17.0.0" & with-dev-setup}
+  "uutf" {= "1.0.4" & with-test}
+  "xdg" {= "3.21.0" & with-dev-setup}
+  "yojson" {= "2.2.2" & with-dev-setup}
+]
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
+dev-repo: "git+https://github.com/ELLIOTTCABLE/ocaml-ambient-context.git"
