@@ -19,7 +19,7 @@ jobs:
             ocaml-compiler:
                - "4.08"
                - "4.14"
-               - "5.4"
+               - "5.3"
 
       runs-on: ${{ matrix.os }}
       steps:
@@ -56,7 +56,7 @@ jobs:
             ocaml-compiler:
                - "4.08"
                - "4.14"
-               - "5.4"
+               - "5.3"
 
       runs-on: ${{ matrix.os }}
       steps:
