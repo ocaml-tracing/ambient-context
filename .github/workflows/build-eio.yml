@@ -37,12 +37,6 @@ jobs:
          - run: opam exec -- dune build @install --only-packages=ambient-context,ambient-context-eio
          - run: opam exec -- dune runtest -f --only-packages=ambient-context,ambient-context-eio
 
-         # now redo it with hmap installed
-         - run: opam install hmap
-
-         - run: opam exec -- dune build @install --only-packages=ambient-context,ambient-context-eio
-         - run: opam exec -- dune runtest -f --only-packages=ambient-context,ambient-context-eio
-
    test-latest:
       name: build w/ Eio (latest deps)
       # Only run on schedule
@@ -71,11 +65,5 @@ jobs:
 
          - run: opam pin . -y -n
          - run: opam install ambient-context-eio --deps-only --with-doc --with-test --with-dev-setup
-         - run: opam exec -- dune build @install --only-packages=ambient-context,ambient-context-eio
-         - run: opam exec -- dune runtest -f --only-packages=ambient-context,ambient-context-eio
-
-         # now redo it with hmap installed
-         - run: opam install hmap
-
          - run: opam exec -- dune build @install --only-packages=ambient-context,ambient-context-eio
          - run: opam exec -- dune runtest -f --only-packages=ambient-context,ambient-context-eio
