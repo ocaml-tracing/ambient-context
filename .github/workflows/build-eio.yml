@@ -15,25 +15,24 @@ jobs:
             os:
                - ubuntu-latest
             ocaml-compiler:
-               - "5.1"
+               - "5.4"
 
       runs-on: ${{ matrix.os }}
       steps:
-         - uses: actions/checkout@main
+         - uses: actions/checkout@v6
          - name: Use OCaml ${{ matrix.ocaml-compiler }}
-           uses: ocaml/setup-ocaml@v2
+           uses: ocaml/setup-ocaml@v3
            with:
               ocaml-compiler: ${{ matrix.ocaml-compiler }}
               dune-cache: true
               opam-pin: false
-              opam-depext: false
          - run: opam pin . -y -n
-         - run: opam install -t ambient-context-eio
+         - run: opam install ambient-context-eio --locked --deps-only --with-doc --with-test --with-dev-setup
          - run: opam exec -- dune build @install --only-packages=ambient-context,ambient-context-eio
-         - run: opam exec -- dune runtest --only-packages=ambient-context,ambient-context-eio
+         - run: opam exec -- dune runtest -f --only-packages=ambient-context,ambient-context-eio
 
          # now redo it with hmap installed
          - run: opam install hmap
 
          - run: opam exec -- dune build @install --only-packages=ambient-context,ambient-context-eio
-         - run: opam exec -- dune runtest --only-packages=ambient-context,ambient-context-eio
+         - run: opam exec -- dune runtest -f --only-packages=ambient-context,ambient-context-eio
