@@ -58,6 +58,48 @@ module TLS_atomic_map : TLS = struct
     ()
 end
 
+(* current implem *)
+module TLS_atomic_map_cur : TLS = struct
+  module Context = Hmap
+  module Atomic = Ambient_context_atomic.Atomic
+
+  module Int_map = Map.Make (struct
+    type t = int
+
+    let compare : t -> t -> int = Stdlib.compare
+  end)
+
+  type st = { m: Context.t ref Int_map.t Atomic.t } [@@unboxed]
+
+  type 'a t = 'a Context.key
+
+  let create () = Context.Key.create ()
+
+  let st = { m = Atomic.make @@ Int_map.empty }
+
+  let get_exn k =
+    let tid = Thread.id @@ Thread.self () in
+    let ctx =
+      match Int_map.find tid (Atomic.get st.m) with
+      | exception Not_found -> Context.empty
+      | ctx_ref -> !ctx_ref
+    in
+    Hmap.get k ctx
+
+  let set k v =
+    let tid = Thread.id @@ Thread.self () in
+    let ctx_ref =
+      Ambient_context_atomic.Util_atomic.update_cas st.m @@ fun m ->
+      try Int_map.find tid m, m
+      with Not_found ->
+        let r = ref Context.empty in
+        r, Int_map.add tid r m
+    in
+
+    let ctx = !ctx_ref |> Hmap.add k v in
+    ctx_ref := ctx
+end
+
 module Tls_lib : TLS = struct
   include Thread_local_storage
 end
@@ -94,6 +136,7 @@ module Bench_single_key = struct
                  (B.throughputN 5
                     [
                       "map", mk (module TLS_atomic_map) n, ();
+                      "cur-map", mk (module TLS_atomic_map_cur) n, ();
                       "tls", mk (module Tls_lib) n, ();
                     ]))
           [ 100; 1_000; 100_000 ]
@@ -127,6 +170,9 @@ module Bench_multi_key = struct
                          (B.throughputN 5
                             [
                               "map", mk (module TLS_atomic_map) n_keys n, ();
+                              ( "cur-map",
+                                mk (module TLS_atomic_map_cur) n_keys n,
+                                () );
                               "tls", mk (module Tls_lib) n_keys n, ();
                             ]))
                   [ 100; 1_000; 100_000 ])
