@@ -5,12 +5,14 @@ on:
       branches:
          - main
    pull_request:
+   schedule:
+      - cron: "0 0 1,15 * *" # Biweekly on 1st and 15th
 
 jobs:
-   run:
-      name: build w/ Eio
+   test-locked:
+      name: build w/ Eio (locked deps)
       strategy:
-         fail-fast: true
+         fail-fast: false
          matrix:
             os:
                - ubuntu-latest
@@ -26,8 +28,44 @@ jobs:
               ocaml-compiler: ${{ matrix.ocaml-compiler }}
               dune-cache: true
               opam-pin: false
+
          - run: opam pin . -y -n
          - run: opam install ambient-context-eio --locked --deps-only --with-doc --with-test --with-dev-setup
+         - run: opam exec -- dune build @install --only-packages=ambient-context,ambient-context-eio
+         - run: opam exec -- dune runtest -f --only-packages=ambient-context,ambient-context-eio
+
+         # now redo it with hmap installed
+         - run: opam install hmap
+
+         - run: opam exec -- dune build @install --only-packages=ambient-context,ambient-context-eio
+         - run: opam exec -- dune runtest -f --only-packages=ambient-context,ambient-context-eio
+
+   test-latest:
+      name: build w/ Eio (latest deps)
+      # Only run on schedule
+      if: github.event_name == 'schedule'
+      continue-on-error: true
+
+      strategy:
+         fail-fast: false
+         matrix:
+            os:
+               - ubuntu-latest
+            ocaml-compiler:
+               - "5.4"
+
+      runs-on: ${{ matrix.os }}
+      steps:
+         - uses: actions/checkout@v6
+         - name: Use OCaml ${{ matrix.ocaml-compiler }}
+           uses: ocaml/setup-ocaml@v3
+           with:
+              ocaml-compiler: ${{ matrix.ocaml-compiler }}
+              dune-cache: true
+              opam-pin: false
+
+         - run: opam pin . -y -n
+         - run: opam install ambient-context-eio --deps-only --with-doc --with-test --with-dev-setup
          - run: opam exec -- dune build @install --only-packages=ambient-context,ambient-context-eio
          - run: opam exec -- dune runtest -f --only-packages=ambient-context,ambient-context-eio
 
