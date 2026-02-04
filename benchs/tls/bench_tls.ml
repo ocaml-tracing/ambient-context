@@ -73,15 +73,16 @@ open struct
 end
 
 module Bench_single_key = struct
-  let mk (module Tls : TLS) (n : int) () =
+  let mk (module Tls : TLS) (n : int) =
     let key : int Tls.t = Tls.create () in
-    run_on_domains @@ fun () ->
-    for i = 1 to n do
-      Tls.set key i;
-      for _j = 1 to 3 do
-        ignore (Sys.opaque_identity (Tls.get_exn key) : int)
+    fun () ->
+      run_on_domains @@ fun () ->
+      for i = 1 to n do
+        Tls.set key i;
+        for _j = 1 to 3 do
+          ignore (Sys.opaque_identity (Tls.get_exn key) : int)
+        done
       done
-    done
 
   let bench : B.Tree.t =
     let open B.Tree in
@@ -99,18 +100,19 @@ module Bench_single_key = struct
 end
 
 module Bench_multi_key = struct
-  let mk (module Tls : TLS) (n_keys : int) (n : int) () =
+  let mk (module Tls : TLS) (n_keys : int) (n : int) =
     let keys : int Tls.t array = Array.init n_keys (fun _ -> Tls.create ()) in
-    run_on_domains @@ fun () ->
-    for i = 1 to n do
-      for k_idx = 0 to n_keys - 1 do
-        let key = keys.(k_idx) in
-        Tls.set key i;
-        for _j = 1 to 3 do
-          ignore (Sys.opaque_identity (Tls.get_exn key) : int)
+    fun () ->
+      run_on_domains @@ fun () ->
+      for i = 1 to n do
+        for k_idx = 0 to n_keys - 1 do
+          let key = keys.(k_idx) in
+          Tls.set key i;
+          for _j = 1 to 3 do
+            ignore (Sys.opaque_identity (Tls.get_exn key) : int)
+          done
         done
       done
-    done
 
   let bench : B.Tree.t =
     let open B.Tree in
