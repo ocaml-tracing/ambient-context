@@ -16,6 +16,7 @@ depends: [
   "bisect_ppx" {with-test}
   "odig" {with-doc}
   "ocaml-lsp-server" {with-dev-setup}
+  "benchmark" {with-dev-setup}
   "ocamlformat" {with-dev-setup & >= "0.27" & < "0.28"}
   "odoc" {with-doc}
 ]

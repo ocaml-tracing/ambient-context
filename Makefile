@@ -17,6 +17,9 @@ doc:
 format:
 	@dune build @fmt --auto-promote
 
+bench-tls:
+	dune exec --profile=release -- benchs/tls/bench_tls.exe --all
+
 WATCH ?= @all
 watch:
 	@dune build $(WATCH) -w $(OPTS)

@@ -1,13 +1,18 @@
 (lang dune 3.0)
 
 (name ambient-context)
+
 (generate_opam_files true)
+
 (version 0.2)
+
 (source
  (github ocaml-tracing/ocaml-ambient-context))
 
 (authors ELLIOTTCABLE "c-cube")
+
 (maintainers "ELLIOTTCABLE <opam@ell.io>" "c-cube")
+
 (license MIT)
 
 (package
@@ -22,6 +27,7 @@
   (bisect_ppx :with-test)
   (odig :with-doc)
   (ocaml-lsp-server :with-dev-setup)
+  (benchmark :with-dev-setup)
   (ocamlformat
    (and
     :with-dev-setup

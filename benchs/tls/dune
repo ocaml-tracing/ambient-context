@@ -1,0 +1,12 @@
+
+
+(executable
+ (name bench_tls)
+ (libraries
+  ambient-context.atomic
+  benchmark
+  ; base-domains
+  threads.posix
+  thread-local-storage)
+ (flags :standard -open Ambient_context_atomic)
+ (optional))
