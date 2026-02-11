@@ -32,7 +32,7 @@ If a library you depend on (let's pretend it's `foo-deep-lib`) uses `ambient-con
 
 _This means you must to choose, and configure, a storage-mechanism relevant to the callsite(s) in your own application._
 
-Your choice will vary depending on *from where*, in your own code, you're calling into a library that uses `ambient-context` — that is, whether an asynchronous event-loop (such as Lwt or Eio) exists 'above' your calls on the stack. Having determined whether you'll be calling your dependancy (e.g. `foo-deep-lib`) from such an asynchronous context , you'll then need to install the relevant storage-provider at runtime with an appropriately-placed call to `Ambient_context.set_storage_provider`.
+Your choice will vary depending on *from where*, in your own code, you're calling into a library that uses `ambient-context` — that is, whether an asynchronous event-loop (such as Lwt or Eio) exists 'above' your calls on the stack. Having determined whether you'll be calling your dependancy (e.g. `foo-deep-lib`) from such an asynchronous context , you'll then need to install the relevant storage-provider at runtime with an appropriately-placed call to `Ambient_context.set_current_storage`.
 
 > **Example:** if you're writing an Lwt-enabled application, and you'll be calling `bar-intermediary-lib` below the `Lwt_main.run` event-loop on the stack, you'll need to install the `ambient-context-lwt` "storage provider" ...
 >
@@ -67,7 +67,7 @@ Your choice will vary depending on *from where*, in your own code, you're callin
 >    let serve = create_server sock in
 >
 >    (* add this line before [Lwt_main.run]: *)
->    Ctx.set_storage_provider (Ambient_context_lwt.storage ()) ;
+>    Ctx.set_current_storage Ambient_context_lwt.storage ;
 >    Lwt_main.run @@ serve ()
 > ```
 
@@ -75,7 +75,7 @@ Once your application has configured the appropriate runtime context-storage, yo
 
 To communicate with transitive dependencies, you need an opaque `key` — these are usually created and exposed by your transitive dependency; see its documentation.
 
-You can provide ambient values to the transitive dependency via calls to `Ambient_context.with_binding`; which takes that opaque `key`, the new `value` you want to set, and then a callback.
+You can provide ambient values to the transitive dependency via calls to `Ambient_context.with_key_bound_to`; which takes that opaque `key`, the new `value` you want to set, and then a callback.
 
 > **Example:** In our Lwt-enabled application, assuming `foo-deep-lib` takes advantage of the ambient context to communicate about a header it wants to add to HTTP requests, we can set that header in our application's top-level context, and it will be available to `foo-deep-lib`'s calls to `Curl`:
 >
@@ -87,11 +87,11 @@ You can provide ambient values to the transitive dependency via calls to `Ambien
 >    let sock = create_socket () in
 >    let serve = create_server sock in
 >
->    Ctx.set_storage_provider (Ambient_context_lwt.storage ()) ;
+>    Ctx.set_current_storage Ambient_context_lwt.storage ;
 >    Lwt_main.run @@ fun () ->
->    Ctx.with_binding Foo_deep.header_context_key "my header value" @@ fun () ->
+>    Ctx.with_key_bound_to Foo_deep.header_context_key "my header value" @@ fun () ->
 >       (* This empty [bind] may be necessary; see
->          {!Ambient_context_lwt.with_binding}. *)
+>          {!Ambient_context_lwt.with_key_bound_to}. *)
 >       Lwt.bind (serve ()) (fun () -> ())
 > ```
 
@@ -99,7 +99,7 @@ Refer to your dependency's documentation for specific instructions on how to pro
 
 <!-- FIXME: v3.ocaml.org links for the backends' documentation -->
 > [!NOTE]
-> The precise semantics of `with_binding` depend on the chosen storage-backend; refer to your chosen backend's documentation.
+> The precise semantics of `with_key_bound_to` depend on the chosen storage-backend; refer to your chosen backend's documentation.
 
 ### ... as a library
 
@@ -125,13 +125,13 @@ You need depend only on `ambient-context` itself, *not* `ambient-context-lwt`, o
 + (libraries ambient-context curl pcre))
 ```
 
-Use `Ambient_context.create_key` to create an opaque key for the value, and expose that to your user:
+Use `Ambient_context.new_key` to create an opaque key for the value, and expose that to your user:
 
 ```ocaml
 (* lib/foo_deep.ml *)
 module Ctx = Ambient_context
 
-let header_context_key : string Ctx.key = Ctx.create_key ()
+let header_context_key : string Ctx.key = Ctx.new_key ()
 
 (* ... *)
 ```

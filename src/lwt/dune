@@ -1,0 +1,6 @@
+(library
+ (name ambient_context_lwt)
+ (public_name ambient-context-lwt)
+ (synopsis
+  "Storage backend for ambient-context using Lwt's sequence-associated storage")
+ (libraries lwt ambient-context.core))

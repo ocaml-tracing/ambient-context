@@ -1,9 +1,0 @@
-(library
- (name ambient_context_types)
- (public_name ambient-context.types)
- (libraries
-  (select
-   ambient_context_hmap.ml
-   from
-   (hmap -> ambient_context_hmap.real.ml)
-   (-> ambient_context_hmap.vendored.ml))))

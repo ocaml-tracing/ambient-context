@@ -1,0 +1,8 @@
+(library
+ (name ambient_context_tls)
+ (public_name ambient-context.tls)
+ (synopsis "Implementation of ambient-context from thread-local-storage")
+ (optional) ; TLS
+ (libraries
+  (re_export ambient-context.core)
+  (re_export thread-local-storage)))

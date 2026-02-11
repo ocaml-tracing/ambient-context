@@ -1,0 +1,10 @@
+(library
+ (name ambient_context_eio)
+ (public_name ambient-context-eio)
+ (synopsis
+  "Storage backend for ambient-context using Eio's fibre-local storage")
+ (libraries
+  (re_export eio)
+  (re_export eio.core)
+  hmap
+  (re_export ambient-context.core)))
