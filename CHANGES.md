@@ -18,6 +18,7 @@
   - New: `type 'a key = 'a Hmap.key`
 
 **Migration guide:**
+
 ```ocaml
 (* Old code *)
 let k = Ctx.create_key () in

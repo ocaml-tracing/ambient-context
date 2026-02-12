@@ -7,7 +7,7 @@
 (version 0.2)
 
 (source
- (github ocaml-tracing/ocaml-ambient-context))
+ (github ocaml-tracing/ambient-context))
 
 (authors ELLIOTTCABLE "c-cube")
 

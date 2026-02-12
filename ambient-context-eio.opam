@@ -6,8 +6,8 @@ synopsis:
 maintainer: ["ELLIOTTCABLE <opam@ell.io>" "c-cube"]
 authors: ["ELLIOTTCABLE" "c-cube"]
 license: "MIT"
-homepage: "https://github.com/ocaml-tracing/ocaml-ambient-context"
-bug-reports: "https://github.com/ocaml-tracing/ocaml-ambient-context/issues"
+homepage: "https://github.com/ocaml-tracing/ambient-context"
+bug-reports: "https://github.com/ocaml-tracing/ambient-context/issues"
 depends: [
   "dune" {>= "3.0"}
   "ocaml" {>= "5.0"}
@@ -32,4 +32,4 @@ build: [
     "@doc" {with-doc}
   ]
 ]
-dev-repo: "git+https://github.com/ocaml-tracing/ocaml-ambient-context.git"
+dev-repo: "git+https://github.com/ocaml-tracing/ambient-context.git"
